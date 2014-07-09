@@ -1,5 +1,5 @@
-bde_tools
-=========
+bde_plugins
+===========
 
 Tools for formatting code according to BDE Standards
 

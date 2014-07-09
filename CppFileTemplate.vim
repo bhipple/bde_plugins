@@ -4,17 +4,18 @@
 " @author   Ben Hipple
 " @date     6/27/2014
 "
-" @usage -  From any Vim window, :call MkClass("MyPackage", "my_file_name") to make one cpp/h pair.
+" @usage -  From any Vim window, :call MkClassFile("MyPackage", "my_file_name") to make one cpp/h pair.
 "
-"           To make several, :call BatchMkClass("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...) etc.
+"           To make several, :call BatchMkClassFile("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...) etc.
 "
 "
 " @note Helper functions are prefaced with "XH_" to avoid namespace pollution, since I'm not sure how to declare a
 "   function private in Vimscript :)
 
+"source ClassTemplate.vim
 
 " Call to write a single cpp/h pair
-function! MkClass(namespace, filename)
+function! MkClassFile(namespace, filename)
     "---------------------- CONFIGURABLE VARIABLES -----------------------"
     let openingComment = "//@BRIEF"
 
@@ -29,10 +30,10 @@ function! MkClass(namespace, filename)
 
 endfunction
 
-" Calls MkClass for every filename given in the variable length arglist.
-function! BatchMkClass(namespace, ...)
+" Calls MkClassFile for every filename given in the variable length arglist.
+function! BatchMkClassFile(namespace, ...)
     for fileName in a:000
-        silent call MkClass(a:namespace, fileName)
+        silent call MkClassFile(a:namespace, fileName)
     endfor
 endfunction
 
@@ -45,7 +46,7 @@ function! XH_MakeHeader(filename, namespace, openingComment)
     let str = str . "#ifndef " . XH_CalcIncludeGuard(a:filename) . "\n#define " . XH_CalcIncludeGuard(a:filename) . "\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
-    let str = str . XH_AddClassBody(classname)
+    let str = str . XH_Class(classname)
     let str = str . XH_CloseNamespace(a:namespace)
 
     let str = str . "#endif // " . XH_CalcIncludeGuard(a:filename) . "\n\n"
@@ -110,70 +111,6 @@ function! XH_CalcIncludeGuard(filename)
     return "INCLUDED_" . toupper(a:filename)
 endfunction
 
-function! XH_AddClassBody(classname)
-    " 4 indent
-    let indentSize = '    '
-
-    let str = XH_AddClassNameComment(a:classname)
-    let str = str . "class " . a:classname . " {\n"
-    let str = str . "  public:\n"
-
-    let str = str . indentSize . '// CREATORS' . "\n"
-    " Constructor
-    let str = str . indentSize . '//' . a:classname . '() { }' . "\n"
-    " Copy Constructor
-    let str = str . indentSize . '//' . a:classname . '(const ' . a:classname . '&);' . "\n"
-    " Destructor
-    let str = str . indentSize . '//~' . a:classname . '() { }' . "\n\n"
-
-    let str = str . "  private:\n"
-    " Copy Assignment Operator
-    let str = str . indentSize . '//' . a:classname . '& operator=(const ' . a:classname . '&);' . "\n\n"
-
-    let str = str . "\n};" . "\n"
-    return str
-endfunction
-
-
-" Add the:
-"         // =============
-"         // class MyClass
-"         // =============
-" prefix comment
-function! XH_AddClassNameComment(classname)
-    let str = ""
-    let equalSignLine = ""
-    let indentStr = ""
-
-    " Calculate the number of equal signs
-    let ct = 0
-    while(ct < strlen('class ') + strlen(a:classname))
-        let equalSignLine = equalSignLine . "="
-        let ct += 1
-    endwhile
-
-    " If classname is <20 characters, indent 25 spaces
-    " Otherwise, the comment should be centered
-    if(strlen(a:classname) < 20)
-        let indentStr = '                        '
-    else
-        let midpointColumn = (strlen(a:classname) + strlen('// class ')) / 2
-        let indentNumber = 40 - midpointColumn
-
-        let i = 0
-        while(i < indentNumber)
-            let indentStr = indentStr . ' '
-            let i += 1
-        endwhile
-    endif
-
-    let equalSignLine = indentStr . '// ' . equalSignLine . "\n"
-    let str = equalSignLine
-    let str = str . indentStr . '// class ' . a:classname . "\n"
-    let str = str . equalSignLine
-
-    return str
-endfunction
 
 " Bloomberg LP Copyright Message
 function! XH_CopyrightString()

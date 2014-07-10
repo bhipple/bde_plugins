@@ -49,7 +49,7 @@ function! XH_MakeHeader(filename, namespace, openingComment)
     let str = str . XH_Class(classname)
     let str = str . XH_CloseNamespace(a:namespace)
 
-    let str = str . "#endif // " . XH_CalcIncludeGuard(a:filename) . "\n\n"
+    let str = str . "#endif\n\n"
     let str = str . XH_CopyrightString()
 
     put!=str

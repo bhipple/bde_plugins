@@ -14,8 +14,8 @@ endfunction
 "         // =============
 " prefix comment
 "
-" Uses either a given string or the word under the cursor for the Class name
-function! ClassComment(...)
+" Uses either a string parameter or the word under the cursor for the Class name
+function! CmtClass(...)
     if a:0 == 1
         put!=XH_ClassComment(a:1)
     else

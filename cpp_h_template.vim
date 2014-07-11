@@ -6,8 +6,9 @@
 "
 " @usage -  From any Vim window, :call MkClassFile("MyPackage", "my_file_name") to make one cpp/h pair.
 "
-"           To make several, :call BatchMkClassFile("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...) etc.
+"           To make several, :call BatchMkClassFile("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...)
 "
+" @depends  class_formatters.vim
 "
 " @note Helper functions are prefaced with "XH_" to avoid namespace pollution, since I'm not sure how to declare a
 "   function private in Vimscript :)

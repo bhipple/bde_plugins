@@ -8,15 +8,19 @@ function! Class(classname)
     put!=str
 endfunction
 
-
 " Add the:
 "         // =============
 "         // class MyClass
 "         // =============
 " prefix comment
-function! ClassComment(classname)
-    let str = XH_ClassComment(a:classname)
-    put!=str
+"
+" Uses either a given string or the word under the cursor for the Class name
+function! ClassComment(...)
+    if a:0 == 1
+        put!=XH_ClassComment(a:1)
+    else
+        put!=XH_ClassComment(expand('<cword>'))
+    endif
 endfunction
 
 

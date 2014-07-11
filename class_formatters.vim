@@ -1,14 +1,28 @@
-" Vim plugin to make a new Class
-"
+" Vim plugin to make a new Class or reformat existing text
 " @author   Ben Hipple
-"
-" @usage -  From any Vim window, :call Class("classname") to put a class
-"
+
+
+" From any Vim window, :call Class("classname") to put a class
 function! Class(classname)
     let str = XH_Class(a:classname)
     put!=str
 endfunction
 
+
+" Add the:
+"         // =============
+"         // class MyClass
+"         // =============
+" prefix comment
+function! ClassComment(classname)
+    let str = XH_ClassComment(a:classname)
+    put!=str
+endfunction
+
+
+" =============================================================================
+" Private Helper functions
+"
 function! XH_Class(classname)
     " 4 indent
     let indentSize = '    '
@@ -31,17 +45,6 @@ function! XH_Class(classname)
 
     let str = str . "\n};" . "\n"
     return str
-endfunction
-
-
-" Add the:
-"         // =============
-"         // class MyClass
-"         // =============
-" prefix comment
-function! ClassComment(classname)
-    let str = XH_ClassComment(a:classname)
-    put!=str
 endfunction
 
 function! XH_ClassComment(classname)

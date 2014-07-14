@@ -1,6 +1,8 @@
 " Vim plugin to cleanup a module according to BDE standards
 " @author   Ben Hipple
-" @depends  class_formatters.vim
+" @ dependencies:
+source class_formatters.vim
+source cpp_h_template.vim
 
 function! Bde_Format()
     " Remove tabs and EOL whitespaces

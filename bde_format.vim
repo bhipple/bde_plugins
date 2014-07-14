@@ -6,11 +6,15 @@ function! Bde_Format()
     " Remove tabs and EOL whitespaces
     call StripTabsAndTrailingWhitespaces()
 
-    " Check for filename and language tag
-    " TODO
+    " Fix filename and language tag
+    let firstline = getline(1)
+    let reg = '// ' . expand('%:t')
+    if(firstline !~ reg)
+        normal gg
+        put!=XH_FilenameLanguageCommentTag()
+    endif
 
 endfunction
-
 
 function! StripTabsAndTrailingWhitespaces()
   let _s=@/
@@ -19,7 +23,6 @@ function! StripTabsAndTrailingWhitespaces()
   let @/=_s
   exec "normal ``"
 endfunction
-
 
 function! CmtSection(title)
     let str = "// ============================================================================\n"
@@ -36,7 +39,6 @@ function! CmtSection(title)
     let str = str . "// ============================================================================"
     put!=str
 endfunction
-
 
 " =============================================================================
 "                             Helper Functions

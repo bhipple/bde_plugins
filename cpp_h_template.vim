@@ -17,7 +17,7 @@
 " Call to write a single cpp/h pair
 function! MkClassFile(namespace, filename)
     "---------------------- CONFIGURABLE VARIABLES -----------------------"
-    let openingComment = "//@BRIEF"
+    let openingComment = ""
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     execute "tabe" a:filename . ".cpp"
@@ -41,10 +41,8 @@ endfunction
 
 
 " Put the BDE filename and language tag
-function! FilenameLanguageTag()
-    let filename = expand('%:t:r')
-    let filetype = expand('%:e')
-    put!=XH_FilenameLanguageCommentTag(expand('%:t:r'), expand('%:e'))
+function! Bde_filenameLanguageTag()
+    put!=XH_FilenameLanguageCommentTag()
 endfunction
 
 
@@ -54,7 +52,7 @@ endfunction
 function! XH_MakeHeader(filename, namespace, openingComment)
     let classname = XH_CalcClassName(a:filename)
 
-    let str = XH_FilenameLanguageCommentTag(a:filename, "h")
+    let str = XH_FilenameLanguageCommentTag(a:filename)
     let str = str . "#ifndef " . XH_CalcIncludeGuard(a:filename) . "\n#define " . XH_CalcIncludeGuard(a:filename) . "\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
@@ -69,7 +67,7 @@ endfunction
 
 function! XH_MakeCPP(filename, namespace, openingComment)
 
-    let str = XH_FilenameLanguageCommentTag(a:filename, "cpp")
+    let str = XH_FilenameLanguageCommentTag(a:filename)
     let str = str . "#include <" . a:filename . ".h>\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
@@ -102,12 +100,14 @@ function! XH_CalcClassName(filename)
 endfunction
 
 " BDE Prologue - Section 4.2 and 5.3
-function! XH_FilenameLanguageCommentTag(filename, filetype)
-    let str = "// " . a:filename . '.' . a:filetype
+function! XH_FilenameLanguageCommentTag()
+    let filename = expand('%:t:r')
+    let filetype = expand('%:e')
+    let str = "// " . filename . '.' . filetype
 
     " BDE Specified Language tag, right justified to the 79th column
     let languageTag = '-*-C++-*-'
-    let spaceCt = 79 - (strlen("// ") + strlen(a:filename) + 1 + strlen(a:filetype) + strlen(languageTag))
+    let spaceCt = 79 - (strlen("// ") + strlen(filename) + 1 + strlen(filetype) + strlen(languageTag))
 
     let ct = 0
     while(ct < spaceCt)

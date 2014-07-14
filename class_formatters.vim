@@ -16,11 +16,45 @@ endfunction
 "
 " Uses either a string parameter or the word under the cursor for the Class name
 function! CmtClass(...)
+    let classname = ""
     if a:0 == 1
-        put!=XH_ClassComment(a:1)
+        let classname = a:1
     else
-        put!=XH_ClassComment(expand('<cword>'))
+        let classname = expand('<cword>')
     endif
+
+    let str = ""
+    let equalSignLine = ""
+    let indentStr = ""
+
+    " Calculate the number of equal signs
+    let ct = 0
+    while(ct < strlen('class ') + strlen(classname))
+        let equalSignLine = equalSignLine . "="
+        let ct += 1
+    endwhile
+
+    " If classname is <20 characters, indent 25 spaces
+    " Otherwise, the comment should be centered
+    if(strlen(classname) < 20)
+        let indentStr = '                        '
+    else
+        let midpointColumn = (strlen(classname) + strlen('// class ')) / 2
+        let indentNumber = 40 - midpointColumn
+
+        let i = 0
+        while(i < indentNumber)
+            let indentStr = indentStr . ' '
+            let i += 1
+        endwhile
+    endif
+
+    let equalSignLine = indentStr . '// ' . equalSignLine . "\n"
+    let str = equalSignLine
+    let str = str . indentStr . '// class ' . classname . "\n"
+    let str = str . equalSignLine
+
+    put!=str
 endfunction
 
 
@@ -31,7 +65,8 @@ function! XH_Class(classname)
     " 4 indent
     let indentSize = '    '
 
-    let str = XH_ClassComment(a:classname)
+    CmtClass(a:classname)
+    let str = ""
     let str = str . "class " . a:classname . " {\n"
     let str = str . "  public:\n"
 
@@ -48,40 +83,5 @@ function! XH_Class(classname)
     let str = str . indentSize . '//' . a:classname . '& operator=(const ' . a:classname . '&);' . "\n\n"
 
     let str = str . "\n};" . "\n"
-    return str
-endfunction
-
-function! XH_ClassComment(classname)
-    let str = ""
-    let equalSignLine = ""
-    let indentStr = ""
-
-    " Calculate the number of equal signs
-    let ct = 0
-    while(ct < strlen('class ') + strlen(a:classname))
-        let equalSignLine = equalSignLine . "="
-        let ct += 1
-    endwhile
-
-    " If classname is <20 characters, indent 25 spaces
-    " Otherwise, the comment should be centered
-    if(strlen(a:classname) < 20)
-        let indentStr = '                        '
-    else
-        let midpointColumn = (strlen(a:classname) + strlen('// class ')) / 2
-        let indentNumber = 40 - midpointColumn
-
-        let i = 0
-        while(i < indentNumber)
-            let indentStr = indentStr . ' '
-            let i += 1
-        endwhile
-    endif
-
-    let equalSignLine = indentStr . '// ' . equalSignLine . "\n"
-    let str = equalSignLine
-    let str = str . indentStr . '// class ' . a:classname . "\n"
-    let str = str . equalSignLine
-
     return str
 endfunction

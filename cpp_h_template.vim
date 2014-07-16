@@ -41,7 +41,7 @@ endfunction
 
 
 " Put the BDE filename and language tag
-function! Bde_filenameLanguageTag()
+function! Bde_FilenameLanguageTag()
     put!=XH_FilenameLanguageCommentTag()
 endfunction
 

@@ -4,7 +4,13 @@ bde_plugins
 Tools for formatting code according to BDE Standards
 
 
-CppFileTemplate
+Functions
 ---------------
-
-Create a new (.cpp|.h) pair for a given class name
+Bde_Format()
+StripTabsAndTrailingWhitespaces()
+CmtSection(title)
+Class(classname)
+CmtClass(...)
+MkClassFile(namespace, filename)
+BatchMkClassFile(namespace, ...)
+Bde_filenameLanguageTag()

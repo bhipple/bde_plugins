@@ -16,6 +16,15 @@ function! Bde_Format()
         put!=XH_FilenameLanguageCommentTag()
     endif
 
+    " Proper class subsection indentation
+    %s/^public:$/  public:/ge
+    %s/^private:$/  private:/ge
+
+    " TODO
+    " find namespace BloombergLP, find the {, hit %, see if the closing
+    " bracket has a // close BloombergLP comment
+
+
 endfunction
 
 function! StripTabsAndTrailingWhitespaces()

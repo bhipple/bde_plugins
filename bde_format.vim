@@ -35,9 +35,15 @@ function! StripTabsAndTrailingWhitespaces()
   exec "normal ``"
 endfunction
 
-function! CmtSection(title)
-    let str = "// ============================================================================\n"
-    let str = str . "// "
+" Optional second argument specifies what character to use for comment (if not in C/C++)
+function! CmtSection(title, ...)
+    let commentChar = "/"
+    if(a:0 == 1)
+        let commentChar = a:1
+    endif
+
+    let str = commentChar . commentChar . " ============================================================================\n"
+    let str = str . commentChar . commentChar . " "
 
     let startCol = XH_CenteredStringStartColumn(a:title) - strlen("// ") - 1
     let ct = 0
@@ -47,7 +53,7 @@ function! CmtSection(title)
     endwhile
 
     let str = str . a:title . "\n"
-    let str = str . "// ============================================================================"
+    let str = str . commentChar . commentChar . " ============================================================================"
     put!=str
 endfunction
 

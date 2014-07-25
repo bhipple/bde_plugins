@@ -52,12 +52,14 @@ endfunction
 function! XH_MakeHeader(filename, namespace, openingComment)
     let classname = XH_CalcClassName(a:filename)
 
-    let str = XH_FilenameLanguageCommentTag(a:filename)
+    let str = XH_FilenameLanguageCommentTag()
     let str = str . "#ifndef " . XH_CalcIncludeGuard(a:filename) . "\n#define " . XH_CalcIncludeGuard(a:filename) . "\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
-    let str = str . XH_Class(classname)
-    let str = str . XH_CloseNamespace(a:namespace)
+    put!=str
+    call Class(classname)
+    normal j
+    let str = XH_CloseNamespace(a:namespace)
 
     let str = str . "#endif\n\n"
     let str = str . XH_CopyrightString()
@@ -67,7 +69,7 @@ endfunction
 
 function! XH_MakeCPP(filename, namespace, openingComment)
 
-    let str = XH_FilenameLanguageCommentTag(a:filename)
+    let str = XH_FilenameLanguageCommentTag()
     let str = str . "#include <" . a:filename . ".h>\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)

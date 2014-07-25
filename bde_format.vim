@@ -24,6 +24,10 @@ function! Bde_Format()
     " find namespace BloombergLP, find the {, hit %, see if the closing
     " bracket has a // close BloombergLP comment
 
+    " TODO
+    " For each class, if it doesn't have a comment within 2 lines above it,
+    " add the class section comment
+
 
 endfunction
 

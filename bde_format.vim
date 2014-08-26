@@ -26,7 +26,9 @@ function! Bde_Format()
 
     " TODO
     " For each class, if it doesn't have a comment within 2 lines above it,
-    " add the class section comment
+    " add the class section comment.  Only match "class \a*\s*{\=$" to avoid
+    " forward class declarations!  I.e., look for class lines that don't have
+    " a semicolon
 
 
 endfunction

@@ -11,8 +11,11 @@ function! Bde_Format()
     " Fix filename and language tag
     let firstline = getline(1)
     let reg = '// ' . expand('%:t')
+    normal! gg
     if(firstline !~ reg)
-        normal gg
+        put!=XH_FilenameLanguageCommentTag()
+    elseif(len(firstline) != 79)
+        normal! dd
         put!=XH_FilenameLanguageCommentTag()
     endif
 

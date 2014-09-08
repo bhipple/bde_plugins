@@ -8,6 +8,7 @@ Functions
 ---------------
 Bde_Format()  
 StripTabsAndTrailingWhitespaces()  
+FixNamespaceComments()  
 CmtSection(title)  
 Class(classname)  
 CmtClass(...)  

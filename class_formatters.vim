@@ -65,7 +65,6 @@ function! XH_Class(classname)
     " 4 indent
     let indentSize = '    '
 
-    call CmtClass(a:classname)
     normal j
     let str = ""
     let str = str . "class " . a:classname . " {\n"

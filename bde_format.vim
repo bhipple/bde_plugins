@@ -20,16 +20,8 @@ function! Bde_Format()
     %s/^public:$/  public:/ge
     %s/^private:$/  private:/ge
 
-    " TODO
-    " find namespace BloombergLP, find the {, hit %, see if the closing
-    " bracket has a // close BloombergLP comment
-
-    " TODO
-    " For each class, if it doesn't have a comment within 2 lines above it,
-    " add the class section comment.  Only match "class \a*\s*{\=$" to avoid
-    " forward class declarations!  I.e., look for class lines that don't have
-    " a semicolon
-
+    " // close namespace comments
+    call FixNamespaceComments()
 
 endfunction
 
@@ -61,6 +53,32 @@ function! CmtSection(title, ...)
     let str = str . a:title . "\n"
     let str = str . commentChar . commentChar . " ============================================================================"
     put!=str
+endfunction
+
+function! FixNamespaceComments()
+    execute "normal gg"
+    let lastFound = 0
+    normal! /namespace \a* \={
+    let lineNumber = line('.')
+
+    " TODO - Change to regex search and do this for each result from the search
+    " (for cleaner / better style code)
+    while(lineNumber > lastFound)
+        let namespaceParts = split(getline('.'))
+        if(len(namespaceParts) == 2)
+            let namespaceName = "anonymous"
+        else
+            let namespaceName = namespaceParts[1]
+        endif
+
+        normal! $%
+        call setline('.', '}  // close ' . namespaceName)
+        normal! ^%
+
+        normal! /namespace \a* \={
+        let lastFound = lineNumber
+        let lineNumber = line('.')
+    endwhile
 endfunction
 
 " =============================================================================

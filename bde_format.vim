@@ -61,7 +61,7 @@ endfunction
 function! FixNamespaceComments()
     execute "normal gg"
     let lastFound = 0
-    normal! /namespace \a* \={
+    normal! /namespace \w* \={
     let lineNumber = line('.')
 
     " TODO - Change to regex search and do this for each result from the search
@@ -78,7 +78,7 @@ function! FixNamespaceComments()
         call setline('.', '}  // close ' . namespaceName)
         normal! ^%
 
-        normal! /namespace \a* \={
+        normal! /namespace \w* \={
         let lastFound = lineNumber
         let lineNumber = line('.')
     endwhile

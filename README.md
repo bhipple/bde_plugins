@@ -23,10 +23,10 @@ Suggested Mappings
 `nnoremap <Leader>cmt :call CmtSection("")<Left><Left>`  
 `nnoremap <Leader>w :call StripTabsAndTrailingWhitespaces()<CR>`  
   
-`nnoremap <Leader>ii O// Application Includes<CR>// BDE Includes<CR>// System Includes<ESC>`  
 `nnoremap <Leader>ia O// Application Includes<ESC>`  
 `nnoremap <Leader>ib O// BDE Includes<ESC>`  
 `nnoremap <Leader>is O// System Includes<ESC>`  
+`nnoremap <Leader>ii O// Application Includes<CR>// BDE Includes<CR>// System Includes<ESC>`  
   
 `inoremap <F2> BAEL_LOG_TRACE << `  
 `inoremap <F3> BAEL_LOG_DEBUG << `  

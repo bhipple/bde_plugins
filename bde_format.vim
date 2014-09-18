@@ -64,9 +64,7 @@ function! FixNamespaceComments()
     normal! /namespace \w* \={
     let lineNumber = line('.')
 
-    " TODO - Change to regex search and do this for each result from the search
-    " (for cleaner / better style code)
-    while(lineNumber > lastFound)
+    while(lineNumber > 1 && lineNumber > lastFound)
         let namespaceParts = split(getline('.'))
         if(len(namespaceParts) == 2)
             let namespaceName = "anonymous"

@@ -82,6 +82,17 @@ function! FixNamespaceComments()
     endwhile
 endfunction
 
+" Create a Google Test Fixture template
+function! GTestFixture(name)
+    let str = "class " . a:name . " : public testing::Test {\n"
+    let str = str . "  protected:\n"
+    let str = str . "    virtual void SetUp()\n"
+    let str = str . "    {\n"
+    let str = str . "    }\n"
+    let str = str . "};\n\n"
+    put=str
+endfunction
+
 " =============================================================================
 "                             Helper Functions
 " =============================================================================

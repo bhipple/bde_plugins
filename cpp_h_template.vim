@@ -49,8 +49,22 @@ endfunction
 " GTest
 function! MkGtest()
     let filename = expand('%:t:r')
+    let extension = expand('%:e')
+
     execute "vsp " . filename . ".t.cpp"
-    let str = XH_FilenameLanguageCommentTag() . "\n"
+    let str = XH_FilenameLanguageCommentTag()
+    let str = str . "#include <" . filename . ".h>\n\n"
+    let str = str . "// Application Includes\n\n"
+    let str = str . "// System Includes\n"
+    let str = str . "#include <test/gtest.h>\n\n"
+
+    let str = str . "using namespace BloombergLP;\n"
+    let str = str . "using namespace BloombergLP::MY_NAMESPACE;\n\n"  " TODO
+
+    let str = str . XH_CmtSection("Test Fixtures", "/") . "\n\n"
+    let str = str . XH_CmtSection("Tests", "/")
+
+    put!=str
 endfunction
 
 

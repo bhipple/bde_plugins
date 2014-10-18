@@ -43,8 +43,12 @@ function! CmtSection(title, ...)
         let commentChar = a:1
     endif
 
-    let str = commentChar . commentChar . " ============================================================================\n"
-    let str = str . commentChar . commentChar . " "
+    put!=XH_CmtSection(a:title, commentChar)
+endfunction
+
+function! XH_CmtSection(title, commentChar)
+    let str = a:commentChar . a:commentChar . " ============================================================================\n"
+    let str = str . a:commentChar . a:commentChar . " "
 
     let startCol = XH_CenteredStringStartColumn(a:title) - strlen("// ") - 1
     let ct = 0
@@ -54,8 +58,8 @@ function! CmtSection(title, ...)
     endwhile
 
     let str = str . a:title . "\n"
-    let str = str . commentChar . commentChar . " ============================================================================"
-    put!=str
+    let str = str . a:commentChar . a:commentChar . " ============================================================================"
+    return str
 endfunction
 
 function! FixNamespaceComments()

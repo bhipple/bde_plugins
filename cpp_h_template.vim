@@ -8,6 +8,8 @@
 "
 "           To make several, :call BatchMkClassFile("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...)
 "
+"           To make a GTest template based on your current open cpp|h file, :call MkGtest
+"
 " @depends  class_formatters.vim
 "
 " @note Helper functions are prefaced with "XH_" to avoid namespace pollution, since I'm not sure how to declare a
@@ -39,10 +41,16 @@ function! BatchMkClassFile(namespace, ...)
     endfor
 endfunction
 
-
 " Put the BDE filename and language tag
 function! Bde_FilenameLanguageTag()
     put!=XH_FilenameLanguageCommentTag()
+endfunction
+
+" GTest
+function! MkGtest()
+    let filename = expand('%:t:r')
+    execute "vsp " . filename . ".t.cpp"
+    let str = XH_FilenameLanguageCommentTag() . "\n"
 endfunction
 
 

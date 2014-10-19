@@ -73,7 +73,7 @@ function! FixNamespaceComments()
     let curLine = 0
 
     while(curLine < line('$'))
-        if(getline(curLine) =~ '^namespace \w* \={')
+        if(getline(curLine) =~# '^namespace \w* \={')
             let namespaceParts = split(getline(curLine))
             if(len(namespaceParts) == 2)
                 let namespaceName = "anonymous"

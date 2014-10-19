@@ -22,7 +22,3 @@ Tools for creating and formatting code according to BDE Standards
 `inoremap <F3> BAEL_LOG_DEBUG << `  
 `inoremap <F4> BAEL_LOG_ERROR << `  
 `inoremap <F5> << BAEL_LOG_END;<ESC>`  
-
-#### Known issues and TODOs:
-* Formatter breaks when a namespace's { is on a newline
-

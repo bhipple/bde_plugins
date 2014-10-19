@@ -24,7 +24,9 @@ function! Bde_Format()
     %s/^private:$/  private:/ge
 
     " // close namespace comments
-    call FixNamespaceComments()
+    try
+        call FixNamespaceComments()
+    endtry
 
 endfunction
 
@@ -63,26 +65,22 @@ function! XH_CmtSection(title, commentChar)
 endfunction
 
 function! FixNamespaceComments()
-    execute "normal gg"
-    let lastFound = 0
-    normal! /namespace \w* \={
-    let lineNumber = line('.')
+    let curLine = 0
 
-    while(lineNumber > 1 && lineNumber > lastFound)
-        let namespaceParts = split(getline('.'))
-        if(len(namespaceParts) == 2)
-            let namespaceName = "anonymous"
-        else
-            let namespaceName = namespaceParts[1]
+    while(curLine < line('$'))
+        if(getline(curLine) =~ '^namespace \w* \={')
+            let namespaceParts = split(getline(curLine))
+            if(len(namespaceParts) == 2)
+                let namespaceName = "anonymous"
+            else
+                let namespaceName = namespaceParts[1]
+            endif
+
+            execute "normal! " . curLine . "gg"
+            normal! $%
+            call setline('.', '}  // close ' . namespaceName)
         endif
-
-        normal! $%
-        call setline('.', '}  // close ' . namespaceName)
-        normal! ^%
-
-        normal! /namespace \w* \={
-        let lastFound = lineNumber
-        let lineNumber = line('.')
+        let curLine += 1
     endwhile
 endfunction
 

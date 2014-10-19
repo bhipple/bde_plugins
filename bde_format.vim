@@ -4,6 +4,10 @@
 source ~/.vim/bundle/bde_plugins/class_formatters.vim
 source ~/.vim/bundle/bde_plugins/cpp_h_template.vim
 
+" WIP (relative path sourcing)
+"execute "source " . expand("%:p:h") . "/class_formatters.vim"
+"execute "source " . expand("%:p:h") . "/cpp_h_template.vim"
+"
 function! Bde_Format()
     " Remove tabs and EOL whitespaces
     call StripTabsAndTrailingWhitespaces()

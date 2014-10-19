@@ -2,15 +2,11 @@ bde_plugins
 ===========
 Tools for creating and formatting code according to BDE Standards  
 
-#### Functions
-##### Reformatting  
-Bde_Format()  
-StripTabsAndTrailingWhitespaces()  
-##### Code Generation
-MkClassFile(namespace, filename)  
-BatchMkClassFile(namespace, ...)  
-Class(classname)  
-CmtSection(title)  
+* cpp code reformatting  
+* cpp|h file creation  
+* Google Test file and test fixture creation  
+
+
 #### Suggested Mappings
 ##### Functions
 `nnoremap <Leader>fmt :call Bde_Format()<CR>`  

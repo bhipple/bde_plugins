@@ -24,9 +24,10 @@ function! Bde_Format()
     %s/^private:$/  private:/ge
 
     " // close namespace comments
-    try
-        call FixNamespaceComments()
-    endtry
+    call FixNamespaceComments()
+
+    " Fix RCSID spacing
+    %s/^\([A-Z]*_IDENT_RCSID([A-z_]*,\) /\1/ge
 
 endfunction
 

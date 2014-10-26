@@ -9,6 +9,9 @@ source ~/.vim/bundle/bde_plugins/cpp_h_template.vim
 "execute "source " . expand("%:p:h") . "/cpp_h_template.vim"
 "
 function! Bde_Format()
+    " Save current cursor location
+    let lineNo=line('.')
+
     " Remove tabs and EOL whitespaces
     call StripTabsAndTrailingWhitespaces()
 
@@ -32,6 +35,9 @@ function! Bde_Format()
 
     " Fix RCSID spacing
     %s/^\([A-Z]*_IDENT_RCSID([A-z_]*,\) /\1/ge
+
+    " Restore line
+    execute "normal! " . lineNo . "gg"
 
 endfunction
 

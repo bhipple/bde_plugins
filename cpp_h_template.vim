@@ -56,7 +56,7 @@ function! MkGtest()
     let str = str . "#include <" . filename . ".h>\n\n"
     let str = str . "// Application Includes\n\n"
     let str = str . "// System Includes\n"
-    let str = str . "#include <test/gtest.h>\n\n"
+    let str = str . "#include <gtest/gtest.h>\n\n"
 
     let str = str . "using namespace BloombergLP;\n"
     let str = str . "using namespace BloombergLP::MY_NAMESPACE;\n\n"  " TODO

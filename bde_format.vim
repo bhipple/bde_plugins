@@ -38,6 +38,7 @@ function! Bde_Format()
 
     " Restore line
     execute "normal! " . lineNo . "gg"
+    execute "normal! zz"
 
 endfunction
 

@@ -8,9 +8,19 @@ source ~/.vim/bundle/bde_plugins/cpp_h_template.vim
 "execute "source " . expand("%:p:h") . "/class_formatters.vim"
 "execute "source " . expand("%:p:h") . "/cpp_h_template.vim"
 "
-function! Bde_Format()
+function! Bde_Format(...)
     " Save current cursor location
     let lineNo=line('.')
+
+    if(a:0 == 1 && a:1 == "clang")
+        " TODO - just use the shellscript clang
+        execute "silent w"
+        execute "!clang-format -i -style=file " . expand('%:t')
+
+        " Visual selection doesn't seem to work
+        "execute "normal! ggVG"
+        "execute ":pyf ~/bin/clang-format.py<CR>"
+    endif
 
     " Remove tabs and EOL whitespaces
     call StripTabsAndTrailingWhitespaces()

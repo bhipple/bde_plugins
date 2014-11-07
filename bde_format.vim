@@ -1,5 +1,6 @@
 " Vim plugin to cleanup a module according to BDE standards
-" @author   Ben Hipple
+" @author Ben Hipple
+"
 " @ dependencies:
 source ~/.vim/bundle/bde_plugins/class_formatters.vim
 source ~/.vim/bundle/bde_plugins/cpp_h_template.vim
@@ -110,15 +111,24 @@ function! FixNamespaceComments()
 endfunction
 
 function! FixIncludeGuard()
+    " Only operate on header files
+    if(expand('%:e') != 'h')
+        return
+    endif
+
     let correctGuard = 'INCLUDED_' . toupper(expand('%:t:r'))
 
-    let incorrectGuard1 = correctGuard . '_H'
-    exec '%s/' . incorrectGuard1 . '/' . correctGuard . '/ge'
+    let curLine = 0
+    while(curLine < line('$'))
+        if(getline(curLine) =~# '^#ifndef \(INCLUDED_[A-Z_]\)')
+            let incorrectGuard = (split(getline(curLine)))[1]
+            exec '%s/' . incorrectGuard . '/' . correctGuard . '/ge'
+        endif
+        let curLine += 1
+    endwhile
 
     " BDE standard specify that #endif must not be followed by a comment
     %s/^#endif.*$/#endif/ge
-
-    " TODO - Superfluous underscores?  How common is this mistake?
 endfunction
 
 " Create a Google Test Fixture template

@@ -37,8 +37,8 @@ function! Bde_Format(...)
         put!=XH_FilenameLanguageCommentTag()
     endif
 
+    " Standards specify it must be #ifndef INCLUDED_FILENAME"
     call FixIncludeGuard()
-
 
     " Proper class subsection indentation
     %s/^public:$/  public:/ge

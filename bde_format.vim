@@ -36,6 +36,9 @@ function! Bde_Format(...)
         put!=XH_FilenameLanguageCommentTag()
     endif
 
+    call FixIncludeGuard()
+
+
     " Proper class subsection indentation
     %s/^public:$/  public:/ge
     %s/^private:$/  private:/ge
@@ -104,6 +107,18 @@ function! FixNamespaceComments()
         endif
         let curLine += 1
     endwhile
+endfunction
+
+function! FixIncludeGuard()
+    let correctGuard = 'INCLUDED_' . toupper(expand('%:t:r'))
+
+    let incorrectGuard1 = correctGuard . '_H'
+    exec '%s/' . incorrectGuard1 . '/' . correctGuard . '/ge'
+
+    " BDE standard specify that #endif must not be followed by a comment
+    %s/^#endif.*$/#endif/ge
+
+    " TODO - Superfluous underscores?  How common is this mistake?
 endfunction
 
 " Create a Google Test Fixture template

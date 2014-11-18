@@ -46,7 +46,7 @@ function! Bde_FilenameLanguageTag()
     put!=XH_FilenameLanguageCommentTag()
 endfunction
 
-" GTest
+" Google Test
 function! MkGtest()
     let filename = expand('%:t:r')
     let extension = expand('%:e')
@@ -65,6 +65,8 @@ function! MkGtest()
     let str = str . XH_CmtSection("Tests", "/")
 
     put!=str
+
+    exec "normal! gg/MY_NAMESPACE\<CR>"
 endfunction
 
 

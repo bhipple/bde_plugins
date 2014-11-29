@@ -6,8 +6,8 @@ source ~/.vim/bundle/bde_plugins/class_formatters.vim
 source ~/.vim/bundle/bde_plugins/cpp_h_template.vim
 
 " WIP (relative path sourcing)
-"execute "source " . expand("%:p:h") . "/class_formatters.vim"
-"execute "source " . expand("%:p:h") . "/cpp_h_template.vim"
+"exec "source " . expand("%:p:h") . "/class_formatters.vim"
+"exec "source " . expand("%:p:h") . "/cpp_h_template.vim"
 "
 function! Bde_Format(...)
     " Save current cursor location
@@ -15,12 +15,13 @@ function! Bde_Format(...)
 
     if(a:0 == 1 && a:1 == "clang")
         " TODO - just use the shellscript clang
-        execute "silent w"
-        execute "!clang-format -i -style=file " . expand('%:t')
+        exec "silent w"
+        cd %:h
+        exec "!clang-format -i -style=file " . expand('%:t')
 
         " Visual selection doesn't seem to work
-        "execute "normal! ggVG"
-        "execute ":pyf ~/bin/clang-format.py<CR>"
+        "exec "normal! ggVG"
+        "exec ":pyf ~/bin/clang-format.py<CR>"
     endif
 
     " Remove tabs and EOL whitespaces
@@ -37,7 +38,6 @@ function! Bde_Format(...)
         put!=XH_FilenameLanguageCommentTag()
     endif
 
-    " Standards specify it must be #ifndef INCLUDED_FILENAME"
     call FixIncludeGuard()
 
     " Proper class subsection indentation
@@ -51,8 +51,8 @@ function! Bde_Format(...)
     %s/^\([A-Z]*_IDENT_RCSID([A-z_]*,\) /\1/ge
 
     " Restore line
-    execute "normal! " . lineNo . "gg"
-    execute "normal! zz"
+    exec "normal! " . lineNo . "gg"
+    exec "normal! zz"
 
 endfunction
 
@@ -91,23 +91,39 @@ function! XH_CmtSection(title, commentChar)
 endfunction
 
 function! FixNamespaceComments()
+    let namespaces = FindNamespaces()
+
+    for [nsName, nsLine] in namespaces
+        exec "normal! " . nsLine . "gg"
+        normal! $%
+
+        " Watch out for one-line namespaces that haven't been clang'd
+        if(line('.') != nsLine)
+            call setline('.', '}  // close ' . nsName)
+        endif
+    endfor
+endfunction
+
+" Find and return a list of [namespace string, line number] pairs
+function! FindNamespaces()
     let curLine = 0
+    let namespaces = []
 
     while(curLine < line('$'))
         if(getline(curLine) =~# '^namespace \w* \={')
             let namespaceParts = split(getline(curLine))
             if(len(namespaceParts) == 2)
-                let namespaceName = "anonymous"
+                let nsName = "anonymous"
             else
-                let namespaceName = namespaceParts[1]
+                let nsName = namespaceParts[1]
             endif
 
-            execute "normal! " . curLine . "gg"
-            normal! $%
-            call setline('.', '}  // close ' . namespaceName)
+            let namespaces += [[nsName, curLine]]
         endif
         let curLine += 1
     endwhile
+
+    return namespaces
 endfunction
 
 function! FixIncludeGuard()

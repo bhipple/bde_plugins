@@ -22,15 +22,15 @@ function! MkClassFile(namespace, filename)
     let openingComment = ""
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    execute "tabe" a:filename . ".cpp"
-    execute "silent w"
-    execute XH_MakeCPP(a:filename, a:namespace, openingComment)
-    execute "silent w"
+    exec "tabe" a:filename . ".cpp"
+    exec "silent w"
+    exec XH_MakeCPP(a:filename, a:namespace, openingComment)
+    exec "silent w"
 
-    execute "vsp " . a:filename . ".h"
-    execute "silent w"
-    execute XH_MakeHeader(a:filename, a:namespace, openingComment)
-    execute "silent w"
+    exec "vsp " . a:filename . ".h"
+    exec "silent w"
+    exec XH_MakeHeader(a:filename, a:namespace, openingComment)
+    exec "silent w"
 
 endfunction
 
@@ -51,7 +51,9 @@ function! MkGtest()
     let filename = expand('%:t:r')
     let extension = expand('%:e')
 
-    execute "vsp " . filename . ".t.cpp"
+    let namespaces = FindNamespaces()
+
+    exec "vsp " . filename . ".t.cpp"
     let str = XH_FilenameLanguageCommentTag()
     let str = str . "#include <" . filename . ".h>\n\n"
     let str = str . "// Application Includes\n\n"
@@ -59,14 +61,18 @@ function! MkGtest()
     let str = str . "#include <gtest/gtest.h>\n\n"
 
     let str = str . "using namespace BloombergLP;\n"
-    let str = str . "using namespace BloombergLP::MY_NAMESPACE;\n\n"  " TODO
+    let ns = "MY_NAMESPACE"
+    for [nsName, nsLine] in namespaces
+        if(nsName != "BloombergLP" && nsName != "anonymous")
+            let ns = nsName
+        endif
+    endfor
+    let str = str . "using namespace BloombergLP::" . ns . ";\n\n"
 
     let str = str . XH_CmtSection("Test Fixtures", "/") . "\n\n"
     let str = str . XH_CmtSection("Tests", "/")
 
     put!=str
-
-    exec "normal! gg/MY_NAMESPACE\<CR>"
 endfunction
 
 

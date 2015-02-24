@@ -44,9 +44,6 @@ function! Bde_Format(...)
     %s/^public:$/  public:/ge
     %s/^private:$/  private:/ge
 
-    " // close namespace comments
-    call FixNamespaceComments()
-
     " Fix RCSID spacing
     %s/^\([A-Z]*_IDENT_RCSID([A-z_]*,\) /\1/ge
 
@@ -88,20 +85,6 @@ function! XH_CmtSection(title, commentChar)
     let str = str . a:title . "\n"
     let str = str . a:commentChar . a:commentChar . " ============================================================================"
     return str
-endfunction
-
-function! FixNamespaceComments()
-    let namespaces = FindNamespaces()
-
-    for [nsName, nsLine] in namespaces
-        exec "normal! " . nsLine . "gg"
-        normal! $%
-
-        " Watch out for one-line namespaces that haven't been clang'd
-        if(line('.') != nsLine)
-            call setline('.', '}  // close ' . nsName)
-        endif
-    endfor
 endfunction
 
 " Find and return a list of [namespace string, line number] pairs

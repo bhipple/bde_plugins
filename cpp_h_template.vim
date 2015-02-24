@@ -117,8 +117,8 @@ endfunction
 
 function! XH_CloseNamespace(namespace)
     let str = "\n"
-    let str = str . "}  // close " . a:namespace . "\n"
-    let str = str . "}  // close BloombergLP" . "\n\n"
+    let str = str . "}  // close namespace " . a:namespace . "\n"
+    let str = str . "}  // close enterprise namespace" . "\n\n"
     return str
 endfunction
 

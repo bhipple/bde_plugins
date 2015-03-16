@@ -118,10 +118,12 @@ function! FixIncludeGuard()
     let correctGuard = 'INCLUDED_' . toupper(expand('%:t:r'))
 
     let curLine = 0
-    while(curLine < line('$'))
+    let found = 0
+    while(!found && curLine < line('$'))
         if(getline(curLine) =~# '^#ifndef \(INCLUDED_[A-Z_]\)')
             let incorrectGuard = (split(getline(curLine)))[1]
             exec '%s/' . incorrectGuard . '/' . correctGuard . '/ge'
+            let found = 1
         endif
         let curLine += 1
     endwhile

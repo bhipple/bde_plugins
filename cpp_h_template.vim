@@ -160,7 +160,7 @@ endfunction
 function! XH_CopyrightString()
     let str = "// ----------------------------------------------------------------------------" . "\n"
     let str = str . "// NOTICE:" . "\n"
-    let str = str . "//      Copyright (C) Bloomberg L.P., 2014" . "\n"
+    let str = str . "//      Copyright (C) Bloomberg L.P., 2015" . "\n"
     let str = str . "//      All Rights Reserved." . "\n"
     let str = str . "//      Property of Bloomberg L.P. (BLP)" . "\n"
     let str = str . "//      This software is made available solely pursuant to the" . "\n"

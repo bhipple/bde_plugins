@@ -48,6 +48,7 @@ endfunction
 
 " Google Test
 function! MkGtest()
+    cd %:h
     let filename = expand('%:t:r')
     let extension = expand('%:e')
 

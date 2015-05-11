@@ -93,7 +93,7 @@ function! XH_MakeHeader(filename, namespace, openingComment)
     let str = XH_CloseNamespace(a:namespace)
 
     let str = str . "#endif\n\n"
-    let str = str . XH_CopyrightString()
+    "let str = str . XH_CopyrightString()
 
     put!=str
 endfunction
@@ -105,7 +105,7 @@ function! XH_MakeCPP(filename, namespace, openingComment)
 
     let str = str . XH_OpenNamespace(a:namespace)
     let str = str . XH_CloseNamespace(a:namespace)
-    let str = str . XH_CopyrightString()
+    "let str = str . XH_CopyrightString()
 
     put!=str
 endfunction

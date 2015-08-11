@@ -4,7 +4,8 @@
 " @author   Ben Hipple
 " @date     6/27/2014
 "
-" @usage -  From any Vim window, :call MkClassFile("MyPackage", "my_file_name") to make one cpp/h pair.
+" @usage -  From any Vim window, :call MkClassFile("namespace", "my_file_name") to make one cpp/h pair.
+"           my_file_name is the name to use, minus the namespace prefix
 "
 "           To make several, :call BatchMkClassFile("MyPackage", "my_file_name1", "my_file_name2", "my_file_name3", ...)
 "
@@ -17,19 +18,21 @@
 
 
 " Call to write a single cpp/h pair
-function! MkClassFile(namespace, filename)
+function! MkClassFile(namespace, shortFilename)
     "---------------------- CONFIGURABLE VARIABLES -----------------------"
     let openingComment = ""
 
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    exec "tabe" a:filename . ".cpp"
+    let fullFilename = a:namespace . "_" . a:shortFilename
+
+    exec "tabe " . fullFilename . ".cpp"
     exec "silent w"
-    exec XH_MakeCPP(a:filename, a:namespace, openingComment)
+    exec XH_MakeCPP(fullFilename, a:namespace, openingComment)
     exec "silent w"
 
-    exec "vsp " . a:filename . ".h"
+    exec "vsp " . fullFilename . ".h"
     exec "silent w"
-    exec XH_MakeHeader(a:filename, a:namespace, openingComment)
+    exec XH_MakeHeader(fullFilename, a:shortFilename, a:namespace, openingComment)
     exec "silent w"
 
 endfunction
@@ -80,11 +83,11 @@ endfunction
 " =============================================================================
 " Private Helper functions
 "
-function! XH_MakeHeader(filename, namespace, openingComment)
-    let classname = XH_CalcClassName(a:filename)
+function! XH_MakeHeader(fullFilename, classStr, namespace, openingComment)
+    let classname = XH_CalcClassName(a:classStr)
 
     let str = XH_FilenameLanguageCommentTag()
-    let str = str . "#ifndef " . XH_CalcIncludeGuard(a:filename) . "\n#define " . XH_CalcIncludeGuard(a:filename) . "\n\n"
+    let str = str . "#ifndef " . XH_CalcIncludeGuard(a:fullFilename) . "\n#define " . XH_CalcIncludeGuard(a:fullFilename) . "\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
     put!=str

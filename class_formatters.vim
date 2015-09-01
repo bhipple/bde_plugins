@@ -75,12 +75,12 @@ function! XH_Class(classname)
     let str = str . indentSize . '//' . a:classname . '() { }' . "\n"
     " Copy Constructor
     let str = str . indentSize . '//' . a:classname . '(const ' . a:classname . '&);' . "\n"
+    " Copy Assignment Operator
+    let str = str . indentSize . '//' . a:classname . '& operator=(const ' . a:classname . '&);' . "\n\n"
     " Destructor
     let str = str . indentSize . '//~' . a:classname . '() { }' . "\n\n"
 
     let str = str . "  private:\n"
-    " Copy Assignment Operator
-    let str = str . indentSize . '//' . a:classname . '& operator=(const ' . a:classname . '&);' . "\n\n"
 
     let str = str . "\n};" . "\n"
     return str

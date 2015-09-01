@@ -27,7 +27,7 @@ function! MkClassFile(namespace, shortFilename)
 
     exec "tabe " . fullFilename . ".cpp"
     exec "silent w"
-    exec XH_MakeCPP(fullFilename, a:namespace, openingComment)
+    exec XH_MakeCPP(fullFilename, a:shortFilename, a:namespace, openingComment)
     exec "silent w"
 
     exec "vsp " . fullFilename . ".h"
@@ -61,6 +61,7 @@ function! MkGtest()
     let str = XH_FilenameLanguageCommentTag()
     let str = str . "#include <" . filename . ".h>\n\n"
     let str = str . "// Application Includes\n\n"
+    let str = str . "// BDE Includes\n\n"
     let str = str . "// System Includes\n"
     let str = str . "#include <gtest/gtest.h>\n\n"
 
@@ -89,6 +90,8 @@ function! XH_MakeHeader(fullFilename, classStr, namespace, openingComment)
     let str = XH_FilenameLanguageCommentTag()
     let str = str . "#ifndef " . XH_CalcIncludeGuard(a:fullFilename) . "\n#define " . XH_CalcIncludeGuard(a:fullFilename) . "\n\n"
 
+    let str = str . "// Application Includes\n\n"
+    let str = str . "// System Includes\n\n"
     let str = str . XH_OpenNamespace(a:namespace)
     put!=str
     call Class(classname)
@@ -101,23 +104,33 @@ function! XH_MakeHeader(fullFilename, classStr, namespace, openingComment)
     put!=str
 endfunction
 
-function! XH_MakeCPP(filename, namespace, openingComment)
-
+function! XH_MakeCPP(filename, shortFilename, namespace, openingComment)
     let str = XH_FilenameLanguageCommentTag()
     let str = str . "#include <" . a:filename . ".h>\n\n"
+    let str = str . "// Application Includes\n\n"
+    let str = str . "// BDE Includes\n\n"
+    let str = str . "// System Includes\n\n"
 
     let str = str . XH_OpenNamespace(a:namespace)
+    let str = str . XH_AnonymousNamespace(toupper(XH_CalcClassName(a:shortFilename)))
     let str = str . XH_CloseNamespace(a:namespace)
-    "let str = str . XH_CopyrightString()
 
     put!=str
 endfunction
 
 function! XH_OpenNamespace(namespace)
     let str = "namespace BloombergLP {\n"
-    let str = str . "namespace " . a:namespace . " {\n\n"
+    let str = str . "namespace " . a:namespace . " {\n"
     return str
 endfunction
+
+function! XH_AnonymousNamespace(logcategory)
+    let str = "namespace {\n"
+    let str = str . 'const char LOG_CATEGORY[] = "' . a:logcategory . "\";\n"
+    let str = str . "}\n"
+    return str
+endfunction
+
 
 function! XH_CloseNamespace(namespace)
     let str = "\n"
@@ -126,11 +139,11 @@ function! XH_CloseNamespace(namespace)
     return str
 endfunction
 
-
 " Default classname replaces filename's first character with a capital letter,
 " removes underscores, and capitalizes the subsequent letter
 function! XH_CalcClassName(filename)
-    let classname = substitute(a:filename, '^[a-z]', '\U\0', "g")
+    let classname = substitute(a:filename, '^s_', '', "g")
+    let classname = substitute(classname, '^[a-z]', '\U\0', "g")
     let classname = substitute(classname, '_\([a-z]\)', '\U\1', "g")
     return classname
 endfunction

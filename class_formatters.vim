@@ -4,7 +4,7 @@
 
 " From any Vim window, :call Class("classname") to put a class
 function! Class(classname)
-    let str = XH_Class(a:classname)
+    let str = s:Class(a:classname)
     put!=str
 endfunction
 
@@ -61,7 +61,7 @@ endfunction
 " =============================================================================
 " Private Helper functions
 "
-function! XH_Class(classname)
+function! s:Class(classname)
     " 4 indent
     let indentSize = '    '
 

@@ -32,10 +32,10 @@ function! Bde_Format(...)
     let reg = '// ' . expand('%:t')
     normal! gg
     if(firstline !~ reg)
-        put!=XH_FilenameLanguageCommentTag()
+        put!=s:FilenameLanguageCommentTag()
     elseif(len(firstline) != 79)
         normal! dd
-        put!=XH_FilenameLanguageCommentTag()
+        put!=s:FilenameLanguageCommentTag()
     endif
 
     call FixIncludeGuard()
@@ -68,14 +68,14 @@ function! CmtSection(title, ...)
         let commentChar = a:1
     endif
 
-    put!=XH_CmtSection(a:title, commentChar)
+    put!=s:CmtSection(a:title, commentChar)
 endfunction
 
-function! XH_CmtSection(title, commentChar)
+function! s:CmtSection(title, commentChar)
     let str = a:commentChar . a:commentChar . " ============================================================================\n"
     let str = str . a:commentChar . a:commentChar . " "
 
-    let startCol = XH_CenteredStringStartColumn(a:title) - strlen("// ") - 1
+    let startCol = s:CenteredStringStartColumn(a:title) - strlen("// ") - 1
     let ct = 0
     while ct < startCol
         let str = str . " "
@@ -146,7 +146,7 @@ endfunction
 " =============================================================================
 "                             Helper Functions
 " =============================================================================
-function! XH_CenteredStringStartColumn(str)
+function! s:CenteredStringStartColumn(str)
     if strlen(a:str) >= 79
         return 0
     endif

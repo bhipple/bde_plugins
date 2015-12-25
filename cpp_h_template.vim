@@ -12,10 +12,6 @@
 "           To make a GTest template based on your current open cpp|h file, :call MkGtest
 "
 " @depends  class_formatters.vim
-"
-" @note Helper functions are prefaced with "XH_" to avoid namespace pollution, since I'm not sure how to declare a
-"   function private in Vimscript :)
-
 
 " Call to write a single cpp/h pair
 function! MkClassFile(namespace, shortFilename)
@@ -27,12 +23,12 @@ function! MkClassFile(namespace, shortFilename)
 
     exec "tabe " . fullFilename . ".cpp"
     exec "silent w"
-    exec XH_MakeCPP(fullFilename, a:shortFilename, a:namespace, openingComment)
+    exec s:MakeCPP(fullFilename, a:shortFilename, a:namespace, openingComment)
     exec "silent w"
 
     exec "vsp " . fullFilename . ".h"
     exec "silent w"
-    exec XH_MakeHeader(fullFilename, a:shortFilename, a:namespace, openingComment)
+    exec s:MakeHeader(fullFilename, a:shortFilename, a:namespace, openingComment)
     exec "silent w"
 
 endfunction
@@ -46,7 +42,7 @@ endfunction
 
 " Put the BDE filename and language tag
 function! Bde_FilenameLanguageTag()
-    put!=XH_FilenameLanguageCommentTag()
+    put!=s:FilenameLanguageCommentTag()
 endfunction
 
 " Google Test
@@ -58,7 +54,7 @@ function! MkGtest()
     let namespaces = FindNamespaces()
 
     exec "vsp " . filename . ".t.cpp"
-    let str = XH_FilenameLanguageCommentTag()
+    let str = s:FilenameLanguageCommentTag()
     let str = str . "#include <" . filename . ".h>\n\n"
     let str = str . "// Application Includes\n\n"
     let str = str . "// BDE Includes\n\n"
@@ -74,8 +70,8 @@ function! MkGtest()
     endfor
     let str = str . "using namespace BloombergLP::" . ns . ";\n\n"
 
-    let str = str . XH_CmtSection("Test Fixtures", "/") . "\n\n"
-    let str = str . XH_CmtSection("Tests", "/")
+    let str = str . s:CmtSection("Test Fixtures", "/") . "\n\n"
+    let str = str . s:CmtSection("Tests", "/")
 
     put!=str
 endfunction
@@ -84,47 +80,47 @@ endfunction
 " =============================================================================
 " Private Helper functions
 "
-function! XH_MakeHeader(fullFilename, classStr, namespace, openingComment)
-    let classname = XH_CalcClassName(a:classStr)
+function! s:MakeHeader(fullFilename, classStr, namespace, openingComment)
+    let classname = s:CalcClassName(a:classStr)
 
-    let str = XH_FilenameLanguageCommentTag()
-    let str = str . "#ifndef " . XH_CalcIncludeGuard(a:fullFilename) . "\n#define " . XH_CalcIncludeGuard(a:fullFilename) . "\n\n"
+    let str = s:FilenameLanguageCommentTag()
+    let str = str . "#ifndef " . s:CalcIncludeGuard(a:fullFilename) . "\n#define " . s:CalcIncludeGuard(a:fullFilename) . "\n\n"
 
     let str = str . "// Application Includes\n\n"
     let str = str . "// System Includes\n\n"
-    let str = str . XH_OpenNamespace(a:namespace)
+    let str = str . s:OpenNamespace(a:namespace)
     put!=str
     call Class(classname)
     normal j
-    let str = XH_CloseNamespace(a:namespace)
+    let str = s:CloseNamespace(a:namespace)
 
     let str = str . "#endif\n\n"
-    "let str = str . XH_CopyrightString()
+    "let str = str . s:CopyrightString()
 
     put!=str
 endfunction
 
-function! XH_MakeCPP(filename, shortFilename, namespace, openingComment)
-    let str = XH_FilenameLanguageCommentTag()
+function! s:MakeCPP(filename, shortFilename, namespace, openingComment)
+    let str = s:FilenameLanguageCommentTag()
     let str = str . "#include <" . a:filename . ".h>\n\n"
     let str = str . "// Application Includes\n\n"
     let str = str . "// BDE Includes\n\n"
     let str = str . "// System Includes\n\n"
 
-    let str = str . XH_OpenNamespace(a:namespace)
-    let str = str . XH_AnonymousNamespace(toupper(XH_CalcClassName(a:shortFilename)))
-    let str = str . XH_CloseNamespace(a:namespace)
+    let str = str . s:OpenNamespace(a:namespace)
+    let str = str . s:AnonymousNamespace(toupper(s:CalcClassName(a:shortFilename)))
+    let str = str . s:CloseNamespace(a:namespace)
 
     put!=str
 endfunction
 
-function! XH_OpenNamespace(namespace)
+function! s:OpenNamespace(namespace)
     let str = "namespace BloombergLP {\n"
     let str = str . "namespace " . a:namespace . " {\n"
     return str
 endfunction
 
-function! XH_AnonymousNamespace(logcategory)
+function! s:AnonymousNamespace(logcategory)
     let str = "namespace {\n"
     let str = str . 'const char LOG_CATEGORY[] = "' . a:logcategory . "\";\n"
     let str = str . "}\n"
@@ -132,7 +128,7 @@ function! XH_AnonymousNamespace(logcategory)
 endfunction
 
 
-function! XH_CloseNamespace(namespace)
+function! s:CloseNamespace(namespace)
     let str = "\n"
     let str = str . "}  // close namespace " . a:namespace . "\n"
     let str = str . "}  // close enterprise namespace" . "\n\n"
@@ -141,7 +137,7 @@ endfunction
 
 " Default classname replaces filename's first character with a capital letter,
 " removes underscores, and capitalizes the subsequent letter
-function! XH_CalcClassName(filename)
+function! s:CalcClassName(filename)
     let classname = substitute(a:filename, '^s_', '', "g")
     let classname = substitute(classname, '^[a-z]', '\U\0', "g")
     let classname = substitute(classname, '_\([a-z]\)', '\U\1', "g")
@@ -149,7 +145,7 @@ function! XH_CalcClassName(filename)
 endfunction
 
 " BDE Prologue - Section 4.2 and 5.3
-function! XH_FilenameLanguageCommentTag()
+function! s:FilenameLanguageCommentTag()
     let filename = expand('%:t:r')
     let filetype = expand('%:e')
     let str = "// " . filename . '.' . filetype
@@ -168,13 +164,13 @@ function! XH_FilenameLanguageCommentTag()
     return str
 endfunction
 
-function! XH_CalcIncludeGuard(filename)
+function! s:CalcIncludeGuard(filename)
     return "INCLUDED_" . toupper(a:filename)
 endfunction
 
 
 " Bloomberg LP Copyright Message
-function! XH_CopyrightString()
+function! s:CopyrightString()
     let str = "// ----------------------------------------------------------------------------" . "\n"
     let str = str . "// NOTICE:" . "\n"
     let str = str . "//      Copyright (C) Bloomberg L.P., 2015" . "\n"

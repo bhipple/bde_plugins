@@ -1,5 +1,8 @@
 bde_plugins
 ===========
+Largely deprecated, in favor of UltiSnips. Starting to move code into snippets and generic helper functions
+
+
 Tools for creating and formatting code according to BDE Standards  
 
 * cpp code reformatting  

@@ -53,14 +53,6 @@ function! Bde_Format(...)
 
 endfunction
 
-function! StripTabsAndTrailingWhitespaces()
-  let _s=@/
-  retab
-  %s/\s\+$//e
-  let @/=_s
-  exec "normal ``"
-endfunction
-
 " Optional second argument specifies what character to use for comment (if not in C/C++)
 function! CmtSection(title, ...)
     let commentChar = "/"
@@ -130,17 +122,6 @@ function! FixIncludeGuard()
 
     " BDE standard specify that #endif must not be followed by a comment
     %s/^#endif.*$/#endif/ge
-endfunction
-
-" Create a Google Test Fixture template
-function! GTestFixture(name)
-    let str = "class " . a:name . " : public testing::Test {\n"
-    let str = str . "  protected:\n"
-    let str = str . "    virtual void SetUp()\n"
-    let str = str . "    {\n"
-    let str = str . "    }\n"
-    let str = str . "};\n\n"
-    put=str
 endfunction
 
 " =============================================================================

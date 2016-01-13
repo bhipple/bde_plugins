@@ -167,18 +167,3 @@ endfunction
 function! s:CalcIncludeGuard(filename)
     return "INCLUDED_" . toupper(a:filename)
 endfunction
-
-
-" Bloomberg LP Copyright Message
-function! s:CopyrightString()
-    let str = "// ----------------------------------------------------------------------------" . "\n"
-    let str = str . "// NOTICE:" . "\n"
-    let str = str . "//      Copyright (C) Bloomberg L.P., 2015" . "\n"
-    let str = str . "//      All Rights Reserved." . "\n"
-    let str = str . "//      Property of Bloomberg L.P. (BLP)" . "\n"
-    let str = str . "//      This software is made available solely pursuant to the" . "\n"
-    let str = str . "//      terms of a BLP license agreement which governs its use." . "\n"
-    let str = str . "// ------------------------------- END-OF-FILE --------------------------------"
-    return str
-endfunction
-

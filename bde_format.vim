@@ -24,9 +24,6 @@ function! Bde_Format(...)
         "exec ":pyf ~/bin/clang-format.py<CR>"
     endif
 
-    " Remove tabs and EOL whitespaces
-    call StripTabsAndTrailingWhitespaces()
-
     " Fix filename and language tag
     let firstline = getline(1)
     let reg = '// ' . expand('%:t')
@@ -40,10 +37,6 @@ function! Bde_Format(...)
 
     call FixIncludeGuard()
 
-    " Proper class subsection indentation
-    %s/^public:$/  public:/ge
-    %s/^private:$/  private:/ge
-
     " Fix RCSID spacing
     %s/^\([A-Z]*_IDENT_RCSID([A-z_]*,\) /\1/ge
 
@@ -54,76 +47,6 @@ function! Bde_Format(...)
 endfunction
 
 " Optional second argument specifies what character to use for comment (if not in C/C++)
-function! CmtSection(title, ...)
-    let commentChar = "/"
-    if(a:0 == 1)
-        let commentChar = a:1
-    endif
-
-    put!=s:CmtSection(a:title, commentChar)
-endfunction
-
-function! s:CmtSection(title, commentChar)
-    let str = a:commentChar . a:commentChar . " ============================================================================\n"
-    let str = str . a:commentChar . a:commentChar . " "
-
-    let startCol = s:CenteredStringStartColumn(a:title) - strlen("// ") - 1
-    let ct = 0
-    while ct < startCol
-        let str = str . " "
-        let ct += 1
-    endwhile
-
-    let str = str . a:title . "\n"
-    let str = str . a:commentChar . a:commentChar . " ============================================================================"
-    return str
-endfunction
-
-" Find and return a list of [namespace string, line number] pairs
-function! FindNamespaces()
-    let curLine = 0
-    let namespaces = []
-
-    while(curLine < line('$'))
-        if(getline(curLine) =~# '^namespace \w* \={')
-            let namespaceParts = split(getline(curLine))
-            if(len(namespaceParts) == 2)
-                let nsName = "anonymous"
-            else
-                let nsName = namespaceParts[1]
-            endif
-
-            let namespaces += [[nsName, curLine]]
-        endif
-        let curLine += 1
-    endwhile
-
-    return namespaces
-endfunction
-
-function! FixIncludeGuard()
-    " Only operate on header files
-    if(expand('%:e') != 'h')
-        return
-    endif
-
-    let correctGuard = 'INCLUDED_' . toupper(expand('%:t:r'))
-
-    let curLine = 0
-    let found = 0
-    while(!found && curLine < line('$'))
-        if(getline(curLine) =~# '^#ifndef \(INCLUDED_[A-Z_]\)')
-            let incorrectGuard = (split(getline(curLine)))[1]
-            exec '%s/' . incorrectGuard . '/' . correctGuard . '/ge'
-            let found = 1
-        endif
-        let curLine += 1
-    endwhile
-
-    " BDE standard specify that #endif must not be followed by a comment
-    %s/^#endif.*$/#endif/ge
-endfunction
-
 " =============================================================================
 "                             Helper Functions
 " =============================================================================
